@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.kh.common.JDBCTemplate;
+import static com.kh.common.JDBCTemplate.*;
 import com.kh.model.vo.Member;
 
 // DAO에서는 오로지 SQL문 실행 업무만 집중적으로
@@ -43,7 +43,7 @@ public class MemberDao {
 			e.printStackTrace();
 		} finally {
 			
-			JDBCTemplate.close(pstmt);
+			close(pstmt);
 			
 		}
 	
@@ -84,8 +84,8 @@ public class MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(stmt);
+			close(rset);
+			close(stmt);
 		}
 		
 		return list;
@@ -128,8 +128,8 @@ public class MemberDao {
 			e.printStackTrace();
 		}finally {
 			
-			JDBCTemplate.close(pstmt);
-			JDBCTemplate.close(rset);
+			close(pstmt);
+			close(rset);
 			
 		}
 		
