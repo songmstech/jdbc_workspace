@@ -89,9 +89,52 @@ public class MemberService {
 		return m;
 	}
 
-	public void selectByUserName(String keyword) {
+	public ArrayList<Member> selectByUserName(String keyword) {
 		
-		ArrayList<Member> list = new MemberDao().selectByUserName(keyword);
+		Connection conn = getConnection();
+		ArrayList<Member> list = new MemberDao().selectByUserName(conn,keyword);
+		
+		close(conn);
+		
+		return list;
+	}
+
+	public int updateMember(Member m) {
+		
+		Connection conn = getConnection();
+		
+		int result = new MemberDao().updateMember(conn, m);
+		
+		if(result > 0) {
+			
+			commit(conn);
+			
+		}else {
+			
+			rollback(conn);
+			
+		}
+		
+		return result;
+	}
+
+	public int deleteMember(String userId) {
+		
+		Connection conn = getConnection();
+		
+		int result = new MemberDao().deleteMember(conn, userId);
+		
+		if(result > 0) {
+			
+			commit(conn);
+			
+		}else {
+			
+			rollback(conn);
+			
+		}
+		
+		return result;
 	}
 
 }

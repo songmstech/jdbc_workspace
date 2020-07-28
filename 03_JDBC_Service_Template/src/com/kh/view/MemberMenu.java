@@ -36,7 +36,7 @@ public class MemberMenu {
 			case 3: mc.selectByUserId(inputMemberId()); break;
 			case 4: mc.selectByUserName(inputMemberName()); break;
 			case 5: updateMember(); break;
-			case 6: //mc.deleteMember(inputMemberId()); break;
+			case 6: mc.deleteMember(inputMemberId()); break;
 			case 7: loginMember(); break;
 			case 0: System.out.print("정말로 끝내겠습니까? (y/n) : ");
 					if(sc.nextLine().toUpperCase().charAt(0) == 'Y') {
@@ -109,7 +109,7 @@ public class MemberMenu {
 		m.setAddress(sc.nextLine());
 		
 		// 회원 정보 변경 요청!!
-		//mc.updateMember(m);
+		mc.updateMember(m);
 	}
 	
 	// 5. 로그인 하는 화면

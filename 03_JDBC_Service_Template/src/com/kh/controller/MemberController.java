@@ -57,7 +57,67 @@ public class MemberController {
 
 	public void selectByUserName(String keyword) {
 		
-		new MemberService().selectByUserName(keyword);
+		ArrayList<Member> list = new MemberService().selectByUserName(keyword);
+		
+		if(list.isEmpty()) {
+			
+			new MemberMenu().displayNoData(keyword + "에 해당되는 조회 결과가 없습니다.");
+			
+		}else {
+			
+			new MemberMenu().displayMemberList(list);
+			
+		}
+		
+	}
+
+	public void updateMember(Member m) {
+		
+		int result = new MemberService().updateMember(m);
+		
+		if(result > 0) {
+			
+			new MemberMenu().displaySuccess("성공적으로 변경되었습니다.");
+			
+		}else {
+			
+			new MemberMenu().displayFail("회원정보 변경에 실패했습니다.");
+			
+		}
+	}
+
+	public void deleteMember(String userId) {
+		
+		int result = new MemberService().deleteMember(userId);
+		
+		if(result > 0) {
+			
+			new MemberMenu().displaySuccess("성공적으로 회원 탈퇴되었습니다.");
+			
+		}else {
+			
+			new MemberMenu().displayFail("회원 탈퇴에 실패하였습니다.");
+			
+		}
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

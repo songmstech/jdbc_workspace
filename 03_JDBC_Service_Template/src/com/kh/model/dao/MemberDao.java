@@ -21,7 +21,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		
 		// sql문
-		String sql = "INSERT INTO MEMBER VALUES(SEQ_USERNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)";
+		String sql = "INSERT INTO MEMBER VALUES(SEQ_USERNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE,DEFAULT)";
 		
 		try {
 			
@@ -58,7 +58,7 @@ public class MemberDao {
 		Statement stmt = null;
 		ResultSet rset = null;
 		
-		String sql = "SELECT * FROM MEMBER";
+		String sql = "SELECT * FROM MEMBER ORDER BY ENROLLDATE ASC";
 		
 		try {
 			
@@ -136,18 +136,103 @@ public class MemberDao {
 		return m;
 	}
 
-	public ArrayList<Member> selectByUserName(String keyword) {
+	public ArrayList<Member> selectByUserName(Connection conn, String keyword) {
 		
 		ArrayList<Member> list = new ArrayList<>();
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE %";
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE ?";
 		
-		return null;
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				list.add(new Member(rset.getInt("USERNO"),
+						            rset.getString("USERID"),
+						            rset.getString("USERPWD"),
+						            rset.getString("USERNAME"),
+						            rset.getString("GENDER"),
+						            rset.getInt("AGE"),
+						            rset.getString("EMAIL"),
+						            rset.getString("PHONE"),
+						            rset.getString("ADDRESS"),
+						            rset.getString("HOBBY"),
+						            rset.getDate("ENROLLDATE")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			close(rset);
+			close(pstmt);
+			
+		}
+		
+		return list;
+		
 	}
+
+	public int updateMember(Connection conn, Member m) {
+		
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		
+		String sql = "UPDATE MEMBER SET USERPWD = ?, EMAIL = ?, PHONE = ?, ADDRESS = ? WHERE USERID = ?"; 
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, m.getUserPwd());
+			pstmt.setString(2, m.getEmail());
+			pstmt.setString(3, m.getPhone());
+			pstmt.setString(4, m.getAddress());
+			pstmt.setString(5, m.getUserId());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+		
+	}
+
+	public int deleteMember(Connection conn, String userId) {
+		
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		
+		String sql = "DELETE FROM MEMBER WHERE USERID = ?";
+		
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+		    pstmt.setString(1, userId);
+		    
+		    result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			close(pstmt);
+			
+		}
+		
+		return result;
+	}
+
 
 }
 
