@@ -1,5 +1,7 @@
 package com.kh.controller;
 
+import java.util.ArrayList;
+
 import com.kh.model.dao.MemberDao;
 import com.kh.model.vo.Member;
 import com.kh.view.MemberMenu;
@@ -24,6 +26,18 @@ public class MemberController {
 		}else { // 실패했을 경우 --> 실패화면
 			new MemberMenu().displayFail("회원가입 실패!!");
 			
+		}
+		
+	}
+
+	public void selectList() {
+		
+		ArrayList<Member> list = new MemberDao().selectList(); 
+		
+		if(list.isEmpty()) {
+			new MemberMenu().displayNoData("조회된 데이터가 없습니다.");
+		}else {
+			new MemberMenu().displayMemberList(list);
 		}
 		
 	}

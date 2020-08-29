@@ -2,8 +2,10 @@ package com.kh.model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.kh.model.vo.Member;
 
@@ -104,6 +106,62 @@ public class MemberDao {
 		return result;
 		
 		
+	}
+
+	public ArrayList<Member> selectList() {
+		
+		ArrayList<Member> list = new ArrayList<>();
+		
+		Connection conn = null;
+		
+		Statement stmt = null;
+		
+		ResultSet rset = null;
+		
+		String sql = "SELECT * FROM MEMBER";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC", "JDBC");
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(sql);
+			
+			while(rset.next()) {
+				
+				Member m = new Member();
+				
+				m.setUserNo(rset.getInt("USERNO"));
+				m.setUserId(rset.getString("USERID"));
+				m.setUserPwd(rset.getString("USERPWD"));
+				m.setUserName(rset.getString("username"));
+				m.setGender(rset.getString("GENDER"));
+				m.setAge(rset.getInt("AGE"));
+				m.setEmail(rset.getString("EMAIL"));
+				m.setPhone(rset.getString("phone"));
+				m.setAddress(rset.getString("address"));
+				m.setHobby(rset.getString("HOBBY"));
+				m.setEnrollDate(rset.getDate("enrolldate"));
+				
+				list.add(m);
+				
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
 	}
 	
 	
